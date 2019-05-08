@@ -1,3 +1,4 @@
+
 def max_integer(my_list=[]):
     if my_list is None:
         return
@@ -7,4 +8,3 @@ def max_integer(my_list=[]):
         if (max < num):
             max = num
     return max
-

@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 def no_c(my_string):
     no_c_str = ""
     if my_string is None:
