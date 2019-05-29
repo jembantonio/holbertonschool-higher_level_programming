@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 class Rectangle:
 
-    def __int__(self, width=0, height=0):
+    def __init__(self, width=0, height=0):
         if not type(width) is int:
             raise TypeError("width must be an integer")
         elif width < 0:
