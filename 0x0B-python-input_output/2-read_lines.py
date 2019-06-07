@@ -9,6 +9,6 @@ def read_lines(filename="", nb_lines=0):
 
     with open(filename, 'r', encoding='utf-8') as file:
         if nb_lines <= 0 or type(nb_lines) is not int:
-            print(file.read(), end=''i)
+            print(file.read(), end='')
         for lines in range(nb_lines):
             print(file.readline(), end='')
