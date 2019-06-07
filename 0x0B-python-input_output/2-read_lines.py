@@ -8,8 +8,7 @@ def read_lines(filename="", nb_lines=0):
         raise TypeError("file should be a string")
 
     with open(filename, 'r', encoding='utf-8') as file:
-        if nb_lines <= 0:
-            print(file.read(), end='')
-        while nb_lines != 0:
+        if nb_lines <= 0 or type(nb_lines) is not int:
+            print(file.read(), end=''i)
+        for lines in range(nb_lines):
             print(file.readline(), end='')
-            nb_lines -= 1
