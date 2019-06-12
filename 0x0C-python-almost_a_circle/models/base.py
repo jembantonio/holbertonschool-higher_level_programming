@@ -4,9 +4,13 @@
 
 
 class Base:
+    ''' base class/ parent class
+    '''
     __nb_objects = 0
 
     def __init__(self, id=None):
+        ''' base class initiation
+        '''
         if id is not None:
             self.id = id
         else:
