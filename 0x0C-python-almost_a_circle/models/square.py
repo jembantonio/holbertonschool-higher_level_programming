@@ -9,7 +9,17 @@ class Square(Rectangle):
         class Base
     '''
     def __init__(self, size, x=0, y=0, id=None):
+        ''' initializing class square
+        '''
         super().__init__(size, size, x, y, id)
+
+    def __str__(self):
+        ''' str method used to print properties of square
+        '''
+        return ("[Square] ({:d}) {:d}/{:d} - {:d}".format(self.id,
+                                                          self.x,
+                                                          self.y,
+                                                          self.width))
 
     @property
     def size(self):
