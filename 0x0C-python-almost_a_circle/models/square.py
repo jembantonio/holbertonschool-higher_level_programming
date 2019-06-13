@@ -60,3 +60,13 @@ class Square(Rectangle):
                     self.x = value
                 elif key == "y":
                     self.y = value
+
+    def to_dictionary(self):
+        ''' returns the dictionary attributes of class Square
+            uses super() method
+        '''
+        square_dict = super().to_dictionary()
+        del square_dict['width']
+        del square_dict['height']
+        square_dict.update({'size': self.size})
+        return square_dict
