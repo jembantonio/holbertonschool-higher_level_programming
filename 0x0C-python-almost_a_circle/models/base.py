@@ -40,7 +40,8 @@ class Base:
 
     @staticmethod
     def from_json_string(json_string):
+        empty_list = "[]"
         if json_string is None:
             if len(json_string) == 0:
-                return ([])
+                return empty_list
         return eval(json_string)
