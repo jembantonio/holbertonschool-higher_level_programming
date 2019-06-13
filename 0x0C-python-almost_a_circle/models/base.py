@@ -40,8 +40,19 @@ class Base:
 
     @staticmethod
     def from_json_string(json_string):
+        ''' returns the list of the json string representation
+        '''
         empty_list = "[]"
         if json_string is None:
             if len(json_string) == 0:
                 return empty_list
         return eval(json_string)
+
+    @classmethod
+    def create(cls, **dictionary):
+        ''' creates a dummy instance with all its attributes set
+        '''
+        dummy = cls(1, 1)
+        if dummy is not None:
+            dummy.update(**dictionary)
+        return dummy
