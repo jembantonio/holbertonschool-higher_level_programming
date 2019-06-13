@@ -48,6 +48,7 @@ class Square(Rectangle):
                     self.x = arg
                 elif place == 3:
                     self.y = arg
+                place += 1
 
         elif kwargs is not None:
             for (key, value) in kwargs.items():
@@ -59,4 +60,3 @@ class Square(Rectangle):
                     self.x = value
                 elif key == "y":
                     self.y = value
-
