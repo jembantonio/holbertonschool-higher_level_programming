@@ -52,7 +52,10 @@ class Base:
     def create(cls, **dictionary):
         ''' creates a dummy instance with all its attributes set
         '''
-        dummy = cls(1, 1)
+        if cls.__name__ == "Rectangle":
+            dummy = cls(1, 1)
+        elif cls.__name__ == "Square":
+            dummy = cls(1)
         if dummy is not None:
             dummy.update(**dictionary)
         return dummy
