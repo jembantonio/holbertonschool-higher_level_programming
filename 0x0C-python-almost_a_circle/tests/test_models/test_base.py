@@ -1,13 +1,14 @@
-#absi/usr/bin/python3
+#!/usr/bin/python3
 ''' base Class unitest module
 '''
 import unittest
 from models.base import Base
 
-class TestBase(unittest.TestCase):
 
-    
+class TestBase(unittest.TestCase):
+    ''' test cases for base class '''
     def test_none(self):
+        ''' test None and empty '''
         b0 = Base(1)
         self.assertEqual(b0.id, 1)
         b1 = Base(12)
@@ -22,6 +23,7 @@ class TestBase(unittest.TestCase):
         self.assertEqual(b5.id, 4)
 
     def test_type(self):
+        ''' test type '''
         b0 = Base()
         self.assertEqual(b0.id, 5)
         b1 = Base("type")
