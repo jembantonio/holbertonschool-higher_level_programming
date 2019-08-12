@@ -19,7 +19,7 @@ if __name__ == "__main__":
     for city in cities[:-1]:
         print(city[0], end=", ")
     last = cities[-1]
-    print (last[0])
+    print(last[0])
 
     cur.close()
     db.close()
