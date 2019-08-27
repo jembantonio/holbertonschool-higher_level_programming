@@ -24,4 +24,3 @@ if __name__ == '__main__':
             print("[{}] {}".format(instance.get('id'), instance.get('name')))
     except Exception:
         print("Not a valid JSON")
-
