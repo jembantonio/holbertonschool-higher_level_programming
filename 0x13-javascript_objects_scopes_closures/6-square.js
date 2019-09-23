@@ -26,20 +26,23 @@ class Rectangle {
   }
 }
 
-class Square extends Rectangle {
+class SquarePrev extends Rectangle {
   constructor (size) {
     super(size, size);
   }
+}
 
+class Square extends SquarePrev {
   charPrint (c) {
-    if (typeof x === 'undefined') {
+    if (!c) {
       c = 'X';
     }
     for (let i = 0; i < this.width; i++) {
       console.log(c.repeat(this.width));
+        }
     }
-  }
 }
+
 
 module.exports = Rectangle;
 module.exports = Square;
