@@ -1,15 +1,26 @@
-# 0x07. Python - Test-driven development
+# 0x08. Python - More Classes and Objects
 
 ## Learning Objectives
 
 General
 
-- What’s an interactive test
-- Why tests are important
-- How to write Docstrings to create tests
-- How to write documentation for each module and function
-- What are the basic option flags to create tests
-- How to find edge cases
+- What is the difference between a class and an object or instance
+- What are and how to use public, protected and private attributes
+- What is self
+- What is the special \_\_init\_\_ method and how to use it
+- What is Data Abstraction, Data Encapsulation, and Information Hiding
+- What is the difference between an attribute and a property in Python
+- What is the Pythonic way to write getters and setters in Python
+- What are the special \_\_str** and \_\_repr** methods and how to use them
+- What is the difference between \_\_str** and \_\_repr**
+- What is the difference between a object attribute and a class attribute
+- What is a class method
+- What is a static method
+- How to dynamically create arbitrary new attributes for existing instances of a class
+- How to bind attributes to object and classes
+- What is and what does contain **dict** of a class and of an instance of a class
+- How does Python find the attributes of an object or class
+- How to use the getattr function
 
 ## Requirements
 
@@ -18,316 +29,426 @@ General
 
 ## Tasks
 
-### [0. Integers addition](./0-add_integer.py)
+### [0. Simple rectangle](./0-rectangle.py)
 
-- Write a function that adds 2 integers.
-  - Prototype: def add_integer(a, b=98):
-  - a and b must be integers or floats, otherwise raise a TypeError exception with the message a must be an integer or b must be an integer
-  - a and b must be first casted to integers if they are float
-  - Returns an integer: the addition of a and b
-  - You are not allowed to import any module
+- Write an empty class Rectangle that defines a rectangle:
 
 ```sh
-guillaume@ubuntu:~/0x07$ cat 0-main.py
+guillaume@ubuntu:~/0x08$ cat 0-main.py
 ```
 
 ```python
 #!/usr/bin/python3
-add_integer = __import__('0-add_integer').add_integer
+Rectangle = __import__('0-rectangle').Rectangle
 
-print(add_integer(1, 2))
-print(add_integer(100, -2))
-print(add_integer(2))
-print(add_integer(100.3, -2))
+my_rectangle = Rectangle()
+print(type(my_rectangle))
+print(my_rectangle.__dict__)
+
+```
+
+```sh
+guillaume@ubuntu:~/0x08$ ./0-main.py
+<class '0-rectangle.Rectangle'>
+{}
+```
+
+### [1. Real definition of a rectangle](./1-rectangle.py)
+
+- Write a class Rectangle that defines a rectangle by: (based on 0-rectangle.py)
+  - Private instance attribute: width:
+    - property def width(self): to retrieve it
+    - property setter def width(self, value): to set it:
+      - width must be an integer, otherwise raise a TypeError exception with the message width must be an integer
+      - if width is less than 0, raise a ValueError exception with the message width must be >= 0
+  - Private instance attribute: height:
+    - property def height(self): to retrieve it
+    - property setter def height(self, value): to set it:
+      - height must be an integer, otherwise raise a TypeError exception with the message height must be an integer
+      - if height is less than 0, raise a ValueError exception with the message height must be >= 0
+  - Instantiation with optional width and height: def **init**(self, width=0, height=0):
+
+```
+guillaume@ubuntu:~/0x08$ cat 1-main.py
+```
+
+```python
+#!/usr/bin/python3
+Rectangle = __import__('1-rectangle').Rectangle
+
+my_rectangle = Rectangle(2, 4)
+print(my_rectangle.__dict__)
+
+my_rectangle.width = 10
+my_rectangle.height = 3
+print(my_rectangle.__dict__)
+
+```
+
+```sh
+guillaume@ubuntu:~/0x08$ ./1-main.py
+{'_Rectangle__height': 4, '_Rectangle__width': 2}
+{'_Rectangle__height': 3, '_Rectangle__width': 10}
+```
+
+### [2. Area and Perimeter](./2-rectangle.py)
+
+- Write a class Rectangle that defines a rectangle by: (based on 1-rectangle.py)
+  - Public instance method: def area(self): that returns the rectangle area
+  - Public instance method: def perimeter(self): that returns the rectangle perimeter:
+    - if width or height is equal to 0, perimeter is equal to 0
+
+```sh
+guillaume@ubuntu:~/0x08$ cat 2-main.py
+```
+
+```python
+#!/usr/bin/python3
+Rectangle = __import__('2-rectangle').Rectangle
+
+my_rectangle = Rectangle(2, 4)
+print("Area: {} - Perimeter: {}".format(my_rectangle.area(), my_rectangle.perimeter()))
+
+print("--")
+
+my_rectangle.width = 10
+my_rectangle.height = 3
+print("Area: {} - Perimeter: {}".format(my_rectangle.area(), my_rectangle.perimeter()))
+
+```
+
+```sh
+guillaume@ubuntu:~/0x08$ ./2-main.py
+Area: 8 - Perimeter: 12
+--
+Area: 30 - Perimeter: 26
+```
+
+### [3. String representation](./3-rectangle.py)
+
+- Write a class Rectangle that defines a rectangle by: (based on 2-rectangle.py)
+  - print() and str() should print the rectangle with the character #: (see example below)
+    - if width or height is equal to 0, return an empty string
+
+```sh
+guillaume@ubuntu:~/0x08$ cat 3-main.py
+```
+
+```python
+#!/usr/bin/python3
+Rectangle = __import__('3-rectangle').Rectangle
+
+my_rectangle = Rectangle(2, 4)
+print("Area: {} - Perimeter: {}".format(my_rectangle.area(), my_rectangle.perimeter()))
+
+print(str(my_rectangle))
+print(repr(my_rectangle))
+
+print("--")
+
+my_rectangle.width = 10
+my_rectangle.height = 3
+print(my_rectangle)
+print(repr(my_rectangle))
+
+```
+
+```sh
+guillaume@ubuntu:~/0x08$ ./3-main.py
+Area: 8 - Perimeter: 12
+##
+##
+##
+##
+<3-rectangle.Rectangle object at 0x7f92a75a2eb8>
+--
+##########
+##########
+##########
+<3-rectangle.Rectangle object at 0x7f92a75a2eb8>
+```
+
+### [4. Eval is magic](./4-rectangle.py)
+
+- Write a class Rectangle that defines a rectangle by: (based on 3-rectangle.py)
+  - repr() should return a string representation of the rectangle to be able to recreate a new instance by using eval() (see example below)
+
+```sh
+guillaume@ubuntu:~/0x08$ cat 4-main.py
+```
+
+```python
+#!/usr/bin/python3
+Rectangle = __import__('4-rectangle').Rectangle
+
+my_rectangle = Rectangle(2, 4)
+print(str(my_rectangle))
+print("--")
+print(my_rectangle)
+print("--")
+print(repr(my_rectangle))
+print("--")
+print(hex(id(my_rectangle)))
+print("--")
+
+# create new instance based on representation
+new_rectangle = eval(repr(my_rectangle))
+print(str(new_rectangle))
+print("--")
+print(new_rectangle)
+print("--")
+print(repr(new_rectangle))
+print("--")
+print(hex(id(new_rectangle)))
+print("--")
+
+print(new_rectangle is my_rectangle)
+print(type(new_rectangle) is type(my_rectangle))
+
+```
+
+```sh
+guillaume@ubuntu:~/0x08$ ./4-main.py
+##
+##
+##
+##
+--
+##
+##
+##
+##
+--
+Rectangle(2, 4)
+--
+0x7f09ebf7cc88
+--
+##
+##
+##
+##
+--
+##
+##
+##
+##
+--
+Rectangle(2, 4)
+--
+0x7f09ebf7ccc0
+--
+False
+True
+```
+
+### [5. Detect instance deletion](./5-rectangle.py)
+
+- Write a class Rectangle that defines a rectangle by: (based on 4-rectangle.py)
+  - Print the message Bye rectangle... (... being 3 dots not ellipsis) when an instance of Rectangle is deleted
+
+```sh
+guillaume@ubuntu:~/0x08$ cat 5-main.py
+```
+
+```python
+#!/usr/bin/python3
+Rectangle = __import__('5-rectangle').Rectangle
+
+my_rectangle = Rectangle(2, 4)
+print("Area: {} - Perimeter: {}".format(my_rectangle.area(), my_rectangle.perimeter()))
+
+del my_rectangle
+
 try:
-    print(add_integer(4, "School"))
+    print(my_rectangle)
 except Exception as e:
-    print(e)
-try:
-    print(add_integer(None))
-except Exception as e:
-    print(e)
+    print("[{}] {}".format(e.__class__.__name__, e))
 
 ```
 
 ```sh
-guillaume@ubuntu:~/0x07$ ./0-main.py
-3
-98
-100
-98
-b must be an integer
-a must be an integer
-guillaume@ubuntu:~/0x07$ python3 -m doctest -v ./tests/0-add_integer.txt | tail -2
-9 passed and 0 failed.
-Test passed.
-guillaume@ubuntu:~/0x07$ python3 -c 'print(__import__("0-add_integer").__doc__)' | wc -l
-5
-guillaume@ubuntu:~/0x07$ python3 -c 'print(__import__("0-add_integer").add_integer.__doc__)' | wc -l
-3
+guillaume@ubuntu:~/0x08$ ./5-main.py
+Area: 8 - Perimeter: 12
+Bye rectangle...
+[NameError] name 'my_rectangle' is not defined
 ```
 
-### [1. Divide a matrix](./2-matrix_divided.py)
+### [6. How many instances](./6-rectangle.py)
 
-- Write a function that divides all elements of a matrix.
-  - Prototype: def matrix_divided(matrix, div):
-  - matrix must be a list of lists of integers or floats, otherwise raise a TypeError exception with the message matrix must be a matrix (list of lists) of integers/floats
-  - Each row of the matrix must be of the same size, otherwise raise a TypeError exception with the message Each row of the matrix must have the same size
-  - div must be a number (integer or float), otherwise raise a TypeError exception with the message div must be a number
-  - div can’t be equal to 0, otherwise raise a ZeroDivisionError exception with the message division by zero
-  - All elements of the matrix should be divided by div, rounded to 2 decimal places
-  - Returns a new matrix
+- Write a class Rectangle that defines a rectangle by: (based on 5-rectangle.py)
+  - Public class attribute number_of_instances:
+    - Initialized to 0
+    - Incremented during each new instance instantiation
+    - Decremented during each instance deletion
 
 ```sh
-guillaume@ubuntu:~/0x07$ cat 2-main.py
+guillaume@ubuntu:~/0x08$ cat 6-main.py
 ```
 
 ```python
 #!/usr/bin/python3
-matrix_divided = __import__('2-matrix_divided').matrix_divided
+Rectangle = __import__('6-rectangle').Rectangle
 
-matrix = [
-    [1, 2, 3],
-    [4, 5, 6]
-]
-print(matrix_divided(matrix, 3))
-print(matrix)
+my_rectangle_1 = Rectangle(2, 4)
+my_rectangle_2 = Rectangle(2, 4)
+print("{:d} instances of Rectangle".format(Rectangle.number_of_instances))
+del my_rectangle_1
+print("{:d} instances of Rectangle".format(Rectangle.number_of_instances))
+del my_rectangle_2
+print("{:d} instances of Rectangle".format(Rectangle.number_of_instances))
 
 ```
 
 ```sh
-guillaume@ubuntu:~/0x07$ ./2-main.py
-[[0.33, 0.67, 1.0], [1.33, 1.67, 2.0]]
-[[1, 2, 3], [4, 5, 6]]
-guillaume@ubuntu:~/0x07$ python3 -m doctest -v ./tests/2-matrix_divided.txt | tail -2
-5 passed and 0 failed.
-Test passed.
+guillaume@ubuntu:~/0x08$ ./6-main.py
+2 instances of Rectangle
+Bye rectangle...
+1 instances of Rectangle
+Bye rectangle...
+0 instances of Rectangle
 ```
 
-### [2. Say my name](./3-say_my_name.py)
+### [7. Change representation](./7-rectangle.py)
 
-- Write a function that prints My name is <first name> <last name>
-  - Prototype: def say_my_name(first_name, last_name=""):
-  - first_name and last_name must be strings otherwise, raise a TypeError exception with the message first_name must be a string or last_name must be a string
+- Write a class Rectangle that defines a rectangle by: (based on 6-rectangle.py)
+  - Public class attribute print_symbol:
+    - Initialized to #
+    - Used as symbol for string representation
+    - Can be any type
 
 ```sh
-guillaume@ubuntu:~/0x07$ cat 3-main.py
+guillaume@ubuntu:~/0x08$ cat 7-main.py
 ```
 
 ```python
 #!/usr/bin/python3
-say_my_name = __import__('3-say_my_name').say_my_name
+Rectangle = __import__('7-rectangle').Rectangle
 
-say_my_name("John", "Smith")
-say_my_name("Walter", "White")
-say_my_name("Bob")
-try:
-    say_my_name(12, "White")
-except Exception as e:
-    print(e)
+my_rectangle_1 = Rectangle(8, 4)
+print(my_rectangle_1)
+print("--")
+my_rectangle_1.print_symbol = "&"
+print(my_rectangle_1)
+print("--")
+
+my_rectangle_2 = Rectangle(2, 1)
+print(my_rectangle_2)
+print("--")
+Rectangle.print_symbol = "C"
+print(my_rectangle_2)
+print("--")
+
+my_rectangle_3 = Rectangle(7, 3)
+print(my_rectangle_3)
+
+print("--")
+
+my_rectangle_3.print_symbol = ["C", "is", "fun!"]
+print(my_rectangle_3)
+
+print("--")
 
 ```
 
 ```sh
-guillaume@ubuntu:~/0x07$ ./3-main.py | cat -e
-My name is John Smith$
-My name is Walter White$
-My name is Bob $
-first_name must be a string$
-guillaume@ubuntu:~/0x07$ python3 -m doctest -v ./tests/3-say_my_name.txt | tail -2
-5 passed and 0 failed.
-Test passed.
+guillaume@ubuntu:~/0x08$ ./7-main.py
+########
+########
+########
+########
+--
+&&&&&&&&
+&&&&&&&&
+&&&&&&&&
+&&&&&&&&
+--
+##
+--
+CC
+--
+CCCCCCC
+CCCCCCC
+CCCCCCC
+--
+['C', 'is', 'fun!']['C', 'is', 'fun!']['C', 'is', 'fun!']['C', 'is', 'fun!']['C', 'is', 'fun!']['C', 'is', 'fun!']['C', 'is', 'fun!']
+['C', 'is', 'fun!']['C', 'is', 'fun!']['C', 'is', 'fun!']['C', 'is', 'fun!']['C', 'is', 'fun!']['C', 'is', 'fun!']['C', 'is', 'fun!']
+['C', 'is', 'fun!']['C', 'is', 'fun!']['C', 'is', 'fun!']['C', 'is', 'fun!']['C', 'is', 'fun!']['C', 'is', 'fun!']['C', 'is', 'fun!']
+--
+Bye rectangle...
+Bye rectangle...
+Bye rectangle...
 ```
 
-### [3. Print square](./4-print_square.py)
+### [8. Compare rectangles](./8-rectangle.py)
 
-- Write a function that prints a square with the character #.
-  - Prototype: def print_square(size):
-  - size is the size length of the square
-  - size must be an integer, otherwise raise a TypeError exception with the message size must be an integer
-  - if size is less than 0, raise a ValueError exception with the message size must be >= 0
-  - if size is a float and is less than 0, raise a TypeError exception with the message size must be an integer
+- Write a class Rectangle that defines a rectangle by: (based on 7-rectangle.py)
+  - Static method def bigger_or_equal(rect_1, rect_2): that returns the biggest rectangle based on the area
+    - rect_1 must be an instance of Rectangle, otherwise raise a TypeError exception with the message rect_1 must be an instance of Rectangle
+    - rect_2 must be an instance of Rectangle, otherwise raise a TypeError exception with the message rect_2 must be an instance of Rectangle
+    - Returns rect_1 if both have the same area value
 
 ```sh
-guillaume@ubuntu:~/0x07$ cat 4-main.py
+guillaume@ubuntu:~/0x08$ cat 8-main.py
 ```
 
 ```python
 #!/usr/bin/python3
-print_square = __import__('4-print_square').print_square
+Rectangle = __import__('8-rectangle').Rectangle
 
-print_square(4)
-print("")
-print_square(10)
-print("")
-print_square(0)
-print("")
-print_square(1)
-print("")
-try:
-    print_square(-1)
-except Exception as e:
-    print(e)
-print("")
+my_rectangle_1 = Rectangle(8, 4)
+my_rectangle_2 = Rectangle(2, 3)
+
+if my_rectangle_1 is Rectangle.bigger_or_equal(my_rectangle_1, my_rectangle_2):
+    print("my_rectangle_1 is bigger or equal to my_rectangle_2")
+else:
+    print("my_rectangle_2 is bigger than my_rectangle_1")
+
+
+my_rectangle_2.width = 10
+my_rectangle_2.height = 5
+if my_rectangle_1 is Rectangle.bigger_or_equal(my_rectangle_1, my_rectangle_2):
+    print("my_rectangle_1 is bigger or equal to my_rectangle_2")
+else:
+    print("my_rectangle_2 is bigger than my_rectangle_1")
 
 ```
 
 ```sh
-guillaume@ubuntu:~/0x07$ ./4-main.py
-####
-####
-####
-####
-
-##########
-##########
-##########
-##########
-##########
-##########
-##########
-##########
-##########
-##########
-
-
-#
-
-size must be >= 0
-
-guillaume@ubuntu:~/0x07$ python3 -m doctest -v ./tests/4-print_square.txt
+guillaume@ubuntu:~/0x08$ ./8-main.py
+my_rectangle_1 is bigger or equal to my_rectangle_2
+my_rectangle_2 is bigger than my_rectangle_1
+Bye rectangle...
+Bye rectangle...
 ```
 
-### [4. Text indentation](./5-text_indentation.py)
+### [9. A square is a rectangle](./9-rectangle.py)
 
-- Write a function that prints a text with 2 new lines after each of these characters: ., ? and :
-  - Prototype: def text_indentation(text):
-  - text must be a string, otherwise raise a TypeError exception with the message text must be a string
-  - There should be no space at the beginning or at the end of each printed line
+- Write a class Rectangle that defines a rectangle by: (based on 8-rectangle.py)
+  - Class method def square(cls, size=0): that returns a new Rectangle instance with width == height == size
 
 ```sh
-guillaume@ubuntu:~/0x07$ cat 5-main.py
+guillaume@ubuntu:~/0x08$ cat 9-main.py
 ```
 
 ```python
 #!/usr/bin/python3
-text_indentation = __import__('5-text_indentation').text_indentation
+Rectangle = __import__('9-rectangle').Rectangle
 
-text_indentation("""Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
-Quonam modo? Utrum igitur tibi litteram videor an totas paginas commovere? \
-Non autem hoc: igitur ne illud quidem. Fortasse id optimum, sed ubi illud: \
-Plus semper voluptatis? Teneo, inquit, finem illi videri nihil dolere. \
-Transfer idem ad modestiam vel temperantiam, quae est moderatio cupiditatum \
-rationi oboediens. Si id dicis, vicimus. Inde sermone vario sex illa a Dipylo \
-stadia confecimus. Sin aliud quid voles, postea. Quae animi affectio suum \
-cuique tribuens atque hanc, quam dico. Utinam quidem dicerent alium alio \
-beatiorem! Iam ruinas videres""")
+my_square = Rectangle.square(5)
+print("Area: {} - Perimeter: {}".format(my_square.area(), my_square.perimeter()))
+print(my_square)
 
 ```
 
 ```sh
-guillaume@ubuntu:~/0x07$ ./5-main.py | cat -e
-Lorem ipsum dolor sit amet, consectetur adipiscing elit.$
-$
-Quonam modo?$
-$
-Utrum igitur tibi litteram videor an totas paginas commovere?$
-$
-Non autem hoc:$
-$
-igitur ne illud quidem.$
-$
-Fortasse id optimum, sed ubi illud:$
-$
-Plus semper voluptatis?$
-$
-Teneo, inquit, finem illi videri nihil dolere.$
-$
-Transfer idem ad modestiam vel temperantiam, quae est moderatio cupiditatum rationi oboediens.$
-$
-Si id dicis, vicimus.$
-$
-Inde sermone vario sex illa a Dipylo stadia confecimus.$
-$
-Sin aliud quid voles, postea.$
-$
-Quae animi affectio suum cuique tribuens atque hanc, quam dico.$
-$
-Utinam quidem dicerent alium alio beatiorem! Iam ruinas videresguillaume@ubuntu:~/0x07$
-guillaume@ubuntu:~/0x07$ python3 -m doctest -v ./tests/5-text_indentation.txt
+guillaume@ubuntu:~/0x08$ ./9-main.py
+Area: 25 - Perimeter: 20
+#####
+#####
+#####
+#####
+#####
+Bye rectangle...
 ```
-
-### [5. Max integer - Unittest](./tests/6-max_integer_test.py)
-
-- Since the beginning you have been creating “Interactive tests”. For this exercise, you will add Unittests.
-- In this task, you will write unittests for the function def max_integer(list=[]):.
-  - Your test file should be inside a folder tests
-  - You have to use the unittest module
-  - Your test file should be python files (extension: .py)
-  - Your test file should be executed by using this command: python3 -m unittest tests.6-max_integer_test
-  - All tests you make must be passable by the function below
-
-```
-guillaume@ubuntu:~/0x07$ cat 6-max_integer.py
-```
-
-```python
-#!/usr/bin/python3
-"""Module to find the max integer in a list
-"""
-
-
-def max_integer(list=[]):
-    """Function to find and return the max integer in a list of integers
-        If the list is empty, the function returns None
-    """
-    if len(list) == 0:
-        return None
-    result = list[0]
-    i = 1
-    while i < len(list):
-        if list[i] > result:
-            result = list[i]
-        i += 1
-    return result
-
-```
-
-```sh
-guillaume@ubuntu:~/0x07$
-guillaume@ubuntu:~/0x07$ cat 6-main.py
-```
-
-```python
-#!/usr/bin/python3
-max_integer = __import__('6-max_integer').max_integer
-
-print(max_integer([1, 2, 3, 4]))
-print(max_integer([1, 3, 4, 2]))
-```
-
-```sh
-guillaume@ubuntu:~/0x07$
-guillaume@ubuntu:~/0x07$ ./6-main.py
-4
-4
-guillaume@ubuntu:~/0x07$
-guillaume@ubuntu:~/0x07$ python3 -m unittest tests.6-max_integer_test 2>&1 | tail -1
-OK
-guillaume@ubuntu:~/0x07$
-guillaume@ubuntu:~/0x07$ head -7 tests/6-max_integer_test.py
-```
-
-```python
-#!/usr/bin/python3
-"""Unittest for max_integer([..])
-"""
-import unittest
-max_integer = __import__('6-max_integer').max_integer
-
-class TestMaxInteger(unittest.TestCase):
-```
-
-
 ## Author
 * **Jeremy Antonio** - [jembantonio](https://github.com/jembantonio)
